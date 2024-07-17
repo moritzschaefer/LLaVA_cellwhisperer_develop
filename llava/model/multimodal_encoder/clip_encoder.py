@@ -39,7 +39,7 @@ class CLIPVisionTower(nn.Module):
         pl_model = TranscriptomeTextDualEncoderLightning.load_from_checkpoint(model_path)
         pl_model.eval().to(device)
         pl_model.model.prepare_models(
-            pl_model.model.transcriptome_model, pl_model.model.text_model, force_freeze=True
+            pl_model.model.transcriptome_model, pl_model.model.text_model, modes_to_freeze=["L", "U", "u"]
         )
         pl_model.freeze()
 

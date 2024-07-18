@@ -143,7 +143,7 @@ class ModelWorker:
                 if len(images) != prompt.count(DEFAULT_IMAGE_TOKEN):
                     raise ValueError("Number of images does not match number of <image> tokens in prompt")
 
-                images = torch.tensor(images, device=self.model.device, dtype=torch.float16)
+                images = torch.tensor(images, device=self.model.device, dtype=torch.bfloat16)
 
                 replace_token = DEFAULT_IMAGE_TOKEN
                 if getattr(self.model.config, 'mm_use_im_start_end', False):

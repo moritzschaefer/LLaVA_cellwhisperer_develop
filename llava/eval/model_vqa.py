@@ -82,7 +82,7 @@ def eval_model(args):
 
         input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').unsqueeze(0).to(model.device)
 
-        image_tensor = torch.tensor(image_data["transcriptome_embeds"][orig_id_to_int[image_id]], device=model.device, dtype=torch.float16).unsqueeze(0)  # float16 is the way in llava apparently
+        image_tensor = torch.tensor(image_data["transcriptome_embeds"][orig_id_to_int[image_id]], device=model.device, dtype=torch.bfloat16).unsqueeze(0)  # We are using bfloat16
 
         with torch.inference_mode():
             output_ids = model.generate(

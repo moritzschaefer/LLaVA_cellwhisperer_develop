@@ -762,7 +762,7 @@ class LazySupervisedDataset(Dataset):
             #     batch['images'] = torch.stack(images)
             # else:
             #     batch['images'] = images
-            data_dict['images'] = torch.stack([torch.from_numpy(image)]).to(torch.float16)
+            data_dict['images'] = torch.stack([torch.from_numpy(image)]).to(torch.bfloat16)
         elif self.data_args.is_multimodal:
             # image does not exist in the data, but the model is multimodal
             raise NotImplementedError("need to add an 'empty' transcriptome vector")

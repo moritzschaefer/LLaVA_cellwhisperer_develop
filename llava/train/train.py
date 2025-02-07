@@ -683,11 +683,18 @@ class LazySupervisedDataset(Dataset):
 
         self.image_data = dict(np.load(self.data_args.image_data, allow_pickle=True))
 
+        if data_args.mm_vision_select_layer == -1:  # get shared embeddings
+            self.image_data_key = "transcriptome_embeds"
+        elif data_args.mm_vision_select_layer == -2:  # get image block output (features)
+            self.image_data_key = "transcriptome_features"
+        else:
+            raise ValueError("select_layer must be -1 or -2")
+
         # Identify nan rows from images and filter list_data_dict to not contain those entries
-        nans = np.where(np.isnan(self.image_data["transcriptome_embeds"]))
+        nans = np.where(np.isnan(self.image_data[self.image_data_key]))
+
         broken_ids = self.image_data["orig_ids"][np.unique(nans[0])]
 
-        self.select_layer = data_args.mm_vision_select_layer
 
         self.orig_id_to_int = {k: v for k, v in zip(self.image_data["orig_ids"], range(len(self.image_data["orig_ids"])))}
         # filter list_data_dict to only contain valid keys
@@ -732,13 +739,7 @@ class LazySupervisedDataset(Dataset):
         assert len(sources) == 1, "Don't know why it is wrapped to a list"  # FIXME
         if "image" in sources[0]:
             idx = self.orig_id_to_int[self.list_data_dict[i]["image"]]
-            if self.select_layer == -1:  # get shared embeddings
-                key = "transcriptome_embeds"
-            elif self.select_layer == -2:  # get image block output (features)
-                key = "transcriptome_features"
-            else:
-                raise ValueError("select_layer must be -1 or -2")
-            image = self.image_data[key][idx]
+            image = self.image_data[self.image_data_key][idx]
 
             if self.data_args.image_aspect_ratio == 'pad':
                 pass

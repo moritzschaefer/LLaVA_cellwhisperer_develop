@@ -12,16 +12,18 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: Apache Software License",
 ]
+
 dependencies = [
     "torch==2.1.2", "torchvision==0.16.2",
-    "transformers==4.37.2", "tokenizers==0.15.1", "sentencepiece==0.1.99", "shortuuid==1.0.13",
-    "accelerate==0.21.0", "peft==0.8.2", "bitsandbytes==0.42.0",
+    "transformers==4.48.3", "tokenizers==0.21.0", "sentencepiece==0.1.99", "shortuuid==1.0.13",
+    "accelerate==1.3.0", "peft==0.8.2", "bitsandbytes==0.42.0",
     "pydantic>=2.0.0", "markdown2[all]==2.4.13", "numpy==1.26.4", "scikit-learn==1.2.2",
     "gradio==4.16.0", "gradio_client==0.8.1",
     "requests==2.32.3", "httpx==0.24.0", "uvicorn==0.30.0", "fastapi==0.111.0",
     "einops==0.6.1", "einops-exts==0.0.4", "timm==0.6.13",
     "sglang[all]==0.1.12", "outlines==0.0.30",  # (> 0.0.30 breaks)
-    "flash-attn==2.5.3"  # required for training
+    "flash-attn==2.5.3",  # required for training
+    "protobuf-3.20.1"  # required for compatibility
 ]
 # NOTE: there was at some point a challenging dependency cycle: sglang only works with pydantic<2.0.0 (because of deepspeed import). but gradio, outlines and vllm require pydantic >=2.0. Probably resolved by now
 

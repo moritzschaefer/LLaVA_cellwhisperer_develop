@@ -13,7 +13,7 @@
 #    limitations under the License.
 
 
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union, Any
 
 import torch
 import torch.nn as nn
@@ -68,6 +68,7 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         images: Optional[torch.FloatTensor] = None,
         image_sizes: Optional[List[List[int]]] = None,
         return_dict: Optional[bool] = None,
+        cache_position: Optional[Any] = None,  # type: ignore #    workaround for new transformers version (https://github.com/huggingface/transformers/issues/29426#issuecomment-1979499925)
     ) -> Union[Tuple, CausalLMOutputWithPast]:
 
         if inputs_embeds is None:

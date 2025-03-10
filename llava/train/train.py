@@ -1031,7 +1031,11 @@ def train(attn_implementation=None):
     elif model_args.version == "v0.5":
         tokenizer.pad_token = tokenizer.unk_token
     else:
-        tokenizer.pad_token = tokenizer.unk_token
+        assert tokenizer.unk_token is not None or tokenizer.pad_token is not None, "Tokenizer must have unk or pad token"
+
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.unk_token
+            logging.info("Setting pad token to unk token")
         if model_args.version in conversation_lib.conv_templates:
             conversation_lib.default_conversation = conversation_lib.conv_templates[model_args.version]
         else:
@@ -1065,7 +1069,7 @@ def train(attn_implementation=None):
             for p in model.get_model().mm_projector.parameters():
                 p.requires_grad = False
 
-        if training_args.bits in [4, 8]:
+        if training_args.bits in [4, 8] or training_args.bf16:
             model.get_model().mm_projector.to(dtype=compute_dtype, device=training_args.device)
 
         model.config.mm_projector_lr = training_args.mm_projector_lr

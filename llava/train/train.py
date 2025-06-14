@@ -795,7 +795,7 @@ class LazySupervisedDataset(Dataset):
 
         self.orig_id_to_int = {k: v for k, v in zip(self.image_data["orig_ids"], range(len(self.image_data["orig_ids"])))}
         # filter list_data_dict to only contain valid keys
-        self.list_data_dict = [e for e in self.list_data_dict if e["image"] in self.orig_id_to_int and e["image"] not in broken_ids]
+        self.list_data_dict = [e for e in self.list_data_dict if "image" not in e or (e["image"] in self.orig_id_to_int and e["image"] not in broken_ids)]
 
     def __len__(self):
         return len(self.list_data_dict)
@@ -1046,9 +1046,10 @@ def train(attn_implementation=None):
                                               data_args=data_args)
 
     model.config.mm_use_im_start_end = data_args.mm_use_im_start_end = model_args.mm_use_im_start_end
-    embed_dim = (data_module["train_dataset"])[0]["images"].shape[1]
-    logging.info(f"Identified embed_dim: {embed_dim}")
-    if True:
+
+    if "images" in (data_module["train_dataset"])[0]:
+        embed_dim = (data_module["train_dataset"])[0]["images"].shape[1]
+        logging.info(f"Identified embed_dim: {embed_dim}")
         data_args.is_multimodal = True
         model.get_model().initialize_vision_modules(
             model_args=model_args,

@@ -47,6 +47,7 @@ class CLIPVisionTower(nn.Module):
         processor = TranscriptomeTextDualEncoderProcessor(
             pl_model.model.transcriptome_model.config.model_type,
             model_path_from_name(pl_model.model.text_model.config.model_type),
+            self.image_model.config.model_type,
         )
 
         tokenizer = processor.tokenizer
